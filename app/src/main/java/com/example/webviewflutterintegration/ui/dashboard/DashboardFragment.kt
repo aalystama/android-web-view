@@ -1,18 +1,18 @@
 package com.example.webviewflutterintegration.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.webviewflutterintegration.R
-import com.example.webviewflutterintegration.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {
     override fun onCreateView(
@@ -26,6 +26,7 @@ class DashboardFragment : Fragment() {
         webView.webViewClient = CustomWebViewClient();
         webView.settings.javaScriptEnabled = true;
         webView.loadUrl("https://aalystama.github.io/bloc-counter-build/")
+        webView.addJavascriptInterface(WebInterface(webView.context), "androidApp")
 
         val button = view.findViewById<Button>(R.id.button);
         button.setOnClickListener {
@@ -41,4 +42,13 @@ private class CustomWebViewClient : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         return true;
     }
+}
+
+class WebInterface(private val context: Context) {
+
+    @JavascriptInterface
+    fun makeToast(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
 }
